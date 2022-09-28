@@ -390,6 +390,10 @@ const managerUpdate = (managerUpdateArray) => {
             })
         })
     })
+};
+
+const deleteEmployee = () => {
+    
 }
 
 module.exports = {
