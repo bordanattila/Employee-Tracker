@@ -15,8 +15,8 @@ VALUES ("Frontend", 20000, 1),
        ("Online marketing", 17000, 4);
         
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES  ("Jane", "Doe", 1, 6),
-        ("John", "Doe", 2, 6),
+VALUES  ("Jane", "Tarzan", 1, 6),
+        ("John", "Smith", 2, 6),
         ("Bruce", "Banner", 5, 7),
         ("Peter", "Parker", 3, 7),
         ("Tony", "Stark", 4, 8),

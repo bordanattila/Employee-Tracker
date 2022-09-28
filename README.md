@@ -1,78 +1,26 @@
 # Employee Tracker
 
-## Acceptance Criteria
-GIVEN a command-line application that accepts user input
-WHEN I start the application
-THEN I am presented with the following options: view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
-WHEN I choose to view all departments
-THEN I am presented with a formatted table showing department names and department ids
-WHEN I choose to view all roles
-THEN I am presented with the job title, role id, the department that role belongs to, and the salary for that role
-WHEN I choose to view all employees
-THEN I am presented with a formatted table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
-WHEN I choose to add a department
-THEN I am prompted to enter the name of the department and that department is added to the database
-WHEN I choose to add a role
-THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
-WHEN I choose to add an employee
-THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
-WHEN I choose to update an employee role
-THEN I am prompted to select an employee to update and their new role and this information is updated in the database
+## Description
 
-## Getting Started
-You’ll need to use the `MySQL2 package` (Links to an external site.) to connect to your MySQL database and perform queries, the `Inquirer package` (Links to an external site.) to interact with the user via the command line, and the `console.table package` (Links to an external site.) to print MySQL rows to the console.
+Provide a short description explaining the what, why, and how of your project. Use the following questions as a guide:
 
-## IMPORTANT
-You will be committing a file that contains your database credentials. Make sure that your MySQL password is not used for any other personal accounts, because it will be visible on GitHub. In upcoming lessons, you will learn how to better secure this password, or you can start researching npm packages now that could help you.
+- What was your motivation?
+- Why did you build this project? (Note: the answer is not "Because it was a homework assignment.")
+- What problem does it solve?
+- What did you learn?
 
-You might also want to make your queries asynchronous. MySQL2 exposes a .promise() function on Connections to upgrade an existing non-Promise connection to use Promises. To learn more and make your queries asynchronous, refer to the npm documentation on MySQL2 (Links to an external site.).
+To keep trakc of empoyees in various department firms often use database. This simple application can store various department and roles. The user is able to view all departments, roles and emplpees as well as edit or add new ones. 
+## Installation
 
-Design the database schema as shown in the following image:
-![alt text](temp/12-sql-homework-demo-01.png)
+`npm install`
 
-Database schema includes tables labeled “employee,” role,” and “department.”
+## Usage
 
-As the image illustrates, your schema should contain the following three tables:
+run `npm install'
+New departs can be added. The departments break down to roles that also can be added with salary. New employees can be assigned to roles and managers. User can update employee roles.
 
-## department
 
-id: INT PRIMARY KEY
+![alt text](/images/screenshot1.png)
+![alt text](/images/screenshot2.png)
 
-name: VARCHAR(30) to hold department name
 
-## role
-
-id: INT PRIMARY KEY
-
-title: VARCHAR(30) to hold role title
-
-salary: DECIMAL to hold role salary
-
-department_id: INT to hold reference to department role belongs to
-
-## employee
-
-id: INT PRIMARY KEY
-
-first_name: VARCHAR(30) to hold employee first name
-
-last_name: VARCHAR(30) to hold employee last name
-
-role_id: INT to hold reference to employee role
-
-manager_id: INT to hold reference to another employee that is the manager of the current employee (null if the employee has no manager)
-
-You might want to use a separate file that contains functions for performing specific SQL queries you'll need to use. A constructor function or class could be helpful for organizing these. You might also want to include a seeds.sql file to pre-populate your database, making the development of individual features much easier.
-
-## Bonus
-Try to add some additional functionality to your application, such as the ability to do the following:
-
-Update employee managers.
-
-View employees by manager.
-
-View employees by department.
-
-Delete departments, roles, and employees.
-
-View the total utilized budget of a department—in other words, the combined salaries of all employees in that department.

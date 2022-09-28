@@ -1,5 +1,6 @@
 const inquirer = require("inquirer");
 const connection = require("./connection")
+const cTable = require('console.table');
 
 // const {addDepartment, listRole, addEmployee} = require("./addfunctions");
 
@@ -12,7 +13,7 @@ const mainMenu = () => {
                 type: "list",
                 name: "menuchoice",
                 message: "Select what would you like to do? When done, choose exit. ",
-                choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Exit"],
+                choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Update an employee's manager", "Exit"],
             }
         ])
         .then((selectedTask) => {
@@ -45,6 +46,9 @@ const checkTask = (task) => {
             break;
         case "Update an employee role":
             getUpdateInfo();
+            break;
+        case "Update an employee's manager":
+            getManagerUpdateInfo();
             break;
         default:
             process.exit();
@@ -119,7 +123,8 @@ const makeRoleList = () => {
         for (let i in result) {
             if (err) throw err;
             roleArray.push(result[i].title);
-        } 
+        }
+
     })
 }
 
@@ -135,6 +140,7 @@ const makeManagerList = () => {
             const managerNames = tempList.join(" ")
             managerArray.push(managerNames)
         }
+
     })
 }
 
@@ -149,6 +155,7 @@ const makeEmployeeList = () => {
             const employeeName = tempList.join(" ")
             employeeArray.push(employeeName)
         }
+        console.log(employeeArray[0])
     })
 }
 
@@ -189,7 +196,7 @@ const getRoleInfo = () => {
 const addRole = (newRoleArray) => {
     connection.query(`SELECT id FROM department WHERE name = "${newRoleArray[2]}"`, function (err, result) {
         const role_id = result[0].id
-        toInsert = `INSERT INTO role (title, salary, department_id) VALUES ("${newRoleArray[0]}", "${roleArray[1]}", "${role_id}" )`;
+        toInsert = `INSERT INTO role (title, salary, department_id) VALUES ("${newRoleArray[0]}", "${newRoleArray[1]}", "${role_id}" )`;
         connection.query(toInsert, function (err, result) {
             if (err) throw err;
             console.log(`${newRoleArray[0]} added to the database`);
@@ -199,7 +206,7 @@ const addRole = (newRoleArray) => {
 };
 
 // Collect information for the new emplyee to insert
-const getNewEmployeeInfo = () => {   
+const getNewEmployeeInfo = () => {
     makeRoleList();
     makeManagerList();
     const employeeInfo = [];
@@ -260,11 +267,24 @@ const insertEmployee = (employeeInfo) => {
     })
 };
 
+const callFunctions = new Promise((res, rej) => {
+    let thepromise = true;
+    if (!thepromise) {
+        process.exit()
+    } else {
+        makeEmployeeList();
+        makeRoleList();
+        makeManagerList();
+        res;
+    }
+})
+
+
 // Collect information to update employee
 const getUpdateInfo = () => {
-    makeEmployeeList();
-    makeRoleList();
-    makeManagerList();
+    callFunctions
+        .then
+
     const updateArray = [];
     inquirer
         .prompt([
@@ -278,7 +298,7 @@ const getUpdateInfo = () => {
                 type: "list",
                 message: "What is the new role of the employee?",
                 name: "updateRole",
-                choices: roleArray, 
+                choices: roleArray,
             },
             {
                 type: "list",
@@ -301,9 +321,9 @@ const getUpdateInfo = () => {
 // Find ID of the manager
 const getManagerID = (updateArray) => {
     let managerID = [];
-    const splitName = updateArray[3].split(" ");
-    connection.query(`SELECT man_id FROM manager WHERE last_name = "${splitName[1]}"`, function (err, res) {
-        const manID = res[0].man_id;
+    const splitName = updateArray[2].split(" ");
+    connection.query(`SELECT id FROM employee WHERE last_name = "${splitName[1]}"`, function (err, res) {
+        const manID = res[0].id;
         managerID.push(manID)
     })
     updateEmployee(managerID, updateArray)
@@ -311,19 +331,66 @@ const getManagerID = (updateArray) => {
 
 // Update employee with new information
 const updateEmployee = (managerID, updateArray) => {
-    connection.query(`SELECT id FROM employee WHERE last_name = "${updateArray[1]}"`, function (err, res) {
+    const splitName = updateArray[0].split(" ");
+    connection.query(`SELECT id FROM employee WHERE last_name = "${splitName[1]}"`, function (err, res) {
         const employeeID = res[0].id
-        connection.query(`SELECT id FROM role WHERE title = "${updateArray[2]}"`, function (err, result) {
+        connection.query(`SELECT id FROM role WHERE title = "${updateArray[1]}"`, function (err, result) {
             const role_id = result[0].id
             toInsert = `UPDATE employee SET role_id = "${role_id}", manager_id = "${managerID}" WHERE id = "${employeeID}"`;
             connection.query(toInsert, function (err, result) {
                 if (err) throw err;
-                console.log(`${updateArray[0]} ${updateArray[1]} updated in the database`);
+                console.log(`${updateArray[0]}'s information is updated in the database`);
                 mainMenu();
             })
         })
     })
 };
+
+const getManagerUpdateInfo = () => {
+    makeManagerList();
+    makeManagerList();
+    const managerUpdateArray = [];
+    inquirer
+        .prompt([
+            {
+                type: "list",
+                message: "Which employee's manager would you like to update?",
+                name: "employeeToUpdate",
+                choices: employeeArray,
+            },
+            {
+                type: "list",
+                message: "Who is the new manager?",
+                name: "managerToUpdate",
+                choices: managerArray,
+            }
+        ])
+        .then((response) => {
+            const employeeToUpdate = response.employeeToUpdate;
+            const managerToUpdate = response.managerToUpdate;
+            managerUpdateArray.push(employeeToUpdate, managerToUpdate)
+            managerUpdate(managerUpdateArray)
+        })
+};
+
+const managerUpdate = (managerUpdateArray) => {
+    const splitName = managerUpdateArray[0].split(" ");
+    const splitManager = managerUpdateArray[1].split(" ");
+    connection.query(`SELECT id FROM employee WHERE last_name = "${splitName[1]}"`, function (err, response) {
+        const employeeID = response[0].id;
+        console.log(employeeID)
+        connection.query(`SELECT id FROM employee WHERE last_name = "${splitManager[1]}"`, function (err, response) {
+            const managerID = response[0].id;
+            console.log(managerID)
+            toInsert = `UPDATE employee SET manager_id = "${managerID}" WHERE id = "${employeeID}"`;
+            connection.query(toInsert, function (err, res) {
+                if (err) throw err;
+                console.log(`${managerUpdateArray[0]}'s manager is updated`);
+                mainMenu();
+            })
+        })
+    })
+}
 
 module.exports = {
     mainMenu
