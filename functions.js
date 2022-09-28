@@ -58,7 +58,7 @@ const checkTask = (task) => {
 };
 
 const showDepartment = () => {
-    connection.query("SELECT * FROM department", function (err, result) {
+    connection.query("SELECT id, name FROM department", function (err, result) {
         const array = result;
         // console.log(array);
         // const removeIndex = array.reduce((acc, {id, ...x}) => {acc[id] = x; return acc}, {});
@@ -70,14 +70,15 @@ const showDepartment = () => {
 };
 
 const showRole = () => {
-    connection.query("SELECT * FROM role", function (err, results) {
+    connection.query("SELECT role.id, role.title, role.salary, department.name AS department FROM role JOIN department ON role.department_id = department.id", function (err, results) {
+        console.log(results)
         console.table(results)
         mainMenu();
     });
 };
 
 const showEmployee = () => {
-    connection.query("SELECT * FROM employee", function (err, result) {
+    connection.query("SELECT employee.id, employee.first_name, employee.last_name, employee.role_id AS role, employee.manager_id AS manager FROM employee JOIN role ON employee.role_id = role.id", function (err, result) {
         console.table(result);
         mainMenu();
     });

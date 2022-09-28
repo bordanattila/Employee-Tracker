@@ -13,15 +13,13 @@ VALUES ("Frontend", 20000, 1),
        ("Startup sales", 21000, 2),
        ("Traditional marketing", 19000, 4),
        ("Online marketing", 17000, 4);
-
-INSERT INTO manager (first_name, last_name)
-VALUES  ("Nick", "Fury"),
-        ("Steve", "Rogers"),
-        ("Carol", "Denverse");
         
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES  ("Jane", "Doe", 1, 3),
-        ("John", "Doe", 2, 2),
-        ("Bruce", "Banner", 5, 1),
-        ("Peter", "Parker", 3, 1),
-        ("Tony", "Stark", 4, 1);
+VALUES  ("Jane", "Doe", 1, 6),
+        ("John", "Doe", 2, 6),
+        ("Bruce", "Banner", 5, 7),
+        ("Peter", "Parker", 3, 7),
+        ("Tony", "Stark", 4, 8),
+        ("Nick", "Fury", 5, 0),
+        ("Steve", "Rogers", 6, 0),
+        ("Carol", "Denverse", 7, 0);
