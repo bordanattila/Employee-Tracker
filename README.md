@@ -24,4 +24,4 @@ New departs can be added. The departments break down to roles that also can be a
 ![alt text](/images/screenshot2.png)
 
 Google Drive link:
-https://drive.google.com/file/d/1HTSTQMVeQPh5Sn_0apZqGrEfigoPgtBR/view?usp=sharing
+https://drive.google.com/file/d/1QfbBYBlcpe7uCG8o0x-vVIn6H5dWpLtV/view?usp=sharinggit 
